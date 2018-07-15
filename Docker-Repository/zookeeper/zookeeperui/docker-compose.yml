@@ -1,0 +1,15 @@
+version: '3'
+networks:
+   - my-net:
+      driver:bridge
+
+services:
+ zkui:
+     container_name: zkui
+     image: zkui
+     ports:
+       - "9090:9090"
+     environment:
+         ZK_SERVER: zk1:2181,zk2:2181,zk3:2181
+     networks:
+       - cluster-docker-compose_default
