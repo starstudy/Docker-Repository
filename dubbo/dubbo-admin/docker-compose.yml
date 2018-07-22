@@ -46,8 +46,7 @@ services:
     ports:
       - "7001:8080"
     environment:
-      ZOO_SERVERS: zk1:2181,zk2:2181,zk3:2181
-      ROOT_PASSWD: 123456
+      ZOO_SERVERS: zk1:2181?backup=zk2:2181,zk3:2181
     networks:
       - my-net
 

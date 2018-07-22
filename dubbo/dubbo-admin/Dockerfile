@@ -14,7 +14,7 @@ WORKDIR /usr/local/tomcat/webapps
 RUN rm -rf ROOT
 ADD dubbo-admin-2.5.4.war .
 RUN mv dubbo-admin-2.5.4.war ROOT.war
-RUN unzip ROOT.war -d dubbo-admin
+RUN unzip ROOT.war -d ROOT
 
 
 COPY docker-entrypoint.sh /
