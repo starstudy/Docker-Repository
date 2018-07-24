@@ -1,0 +1,60 @@
+version: '3'
+services:
+  zk1:
+    image: zookeeper:3.4.12
+    restart: always
+    container_name: zk1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zk1:2888:3888 server.2=zk2:2888:3888 server.3=zk3:2888:3888
+    networks:
+      - my-net
+
+  zk2:
+    image: zookeeper:3.4.12
+    restart: always
+    container_name: zk2
+    ports:
+      - "2182:2181"
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zk1:2888:3888 server.2=zk2:2888:3888 server.3=zk3:2888:3888
+    networks:
+      - my-net
+
+  zk3:
+    image: zookeeper:3.4.12
+    restart: always
+    container_name: zk3
+    ports:
+      - "2183:2181"
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zk1:2888:3888 server.2=zk2:2888:3888 server.3=zk3:2888:3888
+    networks:
+      - my-net
+
+  dubbo-monitor:
+    container_name: dubbo-monitor
+    image: duboo-monitor:2.0
+    volumes:
+        - ./dubbo.properties:/opt/conf/dubbo.properties
+    depends_on:
+      - zk1
+      - zk2
+      - zk3
+    ports:
+    - "9001:9001"
+    - "7070:7070"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+    networks:
+    - my-net
+
+networks:
+  my-net:
+    driver: bridge
