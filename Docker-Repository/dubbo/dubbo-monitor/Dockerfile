@@ -1,4 +1,4 @@
-FROM tomcat:9-jre8
+FROM tomcat:java-8
 
 MAINTAINER eason2star@gmail.com
 
@@ -8,9 +8,7 @@ ENV TIME_ZONE=Asia/Shanghai
 RUN rm -rf /etc/localtime \
     && ln -s /usr/share/zoneinfo/$TIME_ZONE /etc/localtime \
     && echo $TIME_ZONE | tee /etc/timezone \
-    && apt-get update \
-	&& apt-get install -y --no-install-recommends net-tools \
-	&& rm -rf /var/lib/apt/lists/*
+    && yum -y install net-tools
 
 COPY ${DUBBO_ASSEMBLY_NAME}-assembly.tar.gz /opt
 COPY scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

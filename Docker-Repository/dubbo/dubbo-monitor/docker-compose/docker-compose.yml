@@ -38,11 +38,16 @@ services:
 
   dubbo-monitor:
     container_name: dubbo-monitor
-    image: dubbo-monitor:1.0
-    volumes: 
-    - ./dubbo.properties:/opt/dubbo-monitor-simple-2.5.4-SNAPSHOT/conf/dubbo.properties
+    image: duboo-monitor:1.0
+    volumes:
+        - ./dubbo.properties:/opt/conf/dubbo.properties
+    depends_on:
+      - zk1
+      - zk2
+      - zk3
     ports:
     - "9001:9001"
+    - "7070:7070"
     logging:
       driver: json-file
       options:
