@@ -3,7 +3,7 @@ FROM tomcat:java-8
 MAINTAINER eason2star@gmail.com
 
 ENV WORKING_DIR /opt
-ENV DUBBO_ASSEMBLY_NAME dubbo-monitor-simple-2.8.5
+ENV DUBBO_ASSEMBLY_NAME dubbo-monitor-simple-2.0.0
 ENV TIME_ZONE=Asia/Shanghai
 RUN rm -rf /etc/localtime \
     && ln -s /usr/share/zoneinfo/$TIME_ZONE /etc/localtime \
