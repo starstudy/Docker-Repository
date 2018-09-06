@@ -1,0 +1,76 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_5.7
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: '123456'
+    volumes:
+      - ./initsql:/docker-entrypoint-initdb.d
+    networks:
+      - my-net
+
+  redis:
+    image: redis:4.0
+    container_name: redis_4.0
+    hostname: redis
+    networks:
+      - my-net
+
+  zookeeper:
+    image: zookeeper:3.4.12
+    restart: always
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zookeeper:2888:3888
+    networks:
+      - my-net
+
+  disconf:
+    image: disconf:1.0
+    container_name: disconf
+    hostname: disconf
+    environment:
+      MYSQL_DISCONF_PASSWORD: '123456'
+      ZOO_SERVERS: localhost:2181
+      REDIS_HOST_NAME: redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+      - zookeeper
+    networks:
+      - my-net
+
+  zkui:
+     container_name: zkui
+     image: zkui
+     ports:
+       - "9090:9090"
+     environment:
+         ZK_SERVER: zookeeper:2181
+     networks:
+       - my-net
+
+  nginx:
+    image: nginx:1.15
+    container_name: nginx_1.15
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./html:/html
+    depends_on:
+      - disconf
+    networks:
+      - my-net
+
+networks:
+  my-net:
+    driver: bridge

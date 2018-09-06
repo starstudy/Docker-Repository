@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  kafka-rest:
+    image: registry.docker.yit.com/confluentinc/cp-kafka-rest:3.3.0
+    container_name: kafka-rest
+    hostname: kafka-rest
+    expose:
+      - 8082
+    environment:
+      - KAFKA_REST_ZOOKEEPER_CONNECT=10.252.211.205:21081/kafka
+      - KAFKA_REST_LISTENERS=http://kafka-rest:8082
+      - KAFKA_REST_BOOTSTRAP_SERVERS=10.252.211.205:9092
+      - KAFKA_REST_HOST_NAME=kafka-rest
+
+    network_mode: bridge
+
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+
+  kafka-topics-ui:
+    image: registry.docker.yit.com/landoop/kafka-topics-ui
+    container_name: kafka-topics-ui
+    ports:
+      - 19000:8000
+    environment:
+      - KAFKA_REST_PROXY_URL=http://kafka-rest:8082
+      - PROXY=true
+    links:
+      - kafka-rest
+
+    network_mode: bridge
+
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
